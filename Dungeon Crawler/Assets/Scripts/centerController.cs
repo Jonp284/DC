@@ -5,7 +5,6 @@ using UnityEngine;
 public class centerController : MonoBehaviour
 {
     public GameObject thePlayer;
-    public Room dude;
 
     private void OnTriggerEnter(Collider other)
     {

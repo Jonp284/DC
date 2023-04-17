@@ -8,13 +8,25 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public GameObject northExit, southExit, eastExit, westExit;
     public GameObject westStart, eastStart, northStart, southStart;
+    private Player player;
+    private Monster monster;
+    private Monster monster1;
     public float movementSpeed = 40.0f;
     private bool isMoving;
-    private Room currentRoom;
+    private int hp;
+    private int armor;
+    private int attack;
 
     // Start is called before the first frame update
     void Start()
     {
+        for(int i = 0; i < 10; i++)
+        {
+            print(Random.Range(1.0f, 10.0f));
+        }
+
+        this.updateExits();
+
         this.rb = this.GetComponent<Rigidbody>();
         this.isMoving = false;
 
@@ -42,17 +54,41 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-        this.currentRoom = MasterData.cs.getCurrentRoom();
-        this.currentRoom.setExits();
      
+    }
+
+    public void setStats(int hp, int armor, int attack)
+    {
+        this.hp = hp;
+        this.armor = armor;
+        this.attack = attack;
+    }
+
+    private void updateExits()
+    {
+        Room currentRoom = MasterData.p.getCurrentRoom();
+        if(currentRoom.hasExit("north") == false)
+        {
+            this.northExit.SetActive(false);
+        }
+        if (currentRoom.hasExit("south") == false)
+        {
+            this.southExit.SetActive(false);
+        }
+        if (currentRoom.hasExit("east") == false)
+        {
+            this.eastExit.SetActive(false);
+        }
+        if (currentRoom.hasExit("west") == false)
+        {
+            this.westExit.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("center"))
         {
-            this.currentRoom = MasterData.cs.getCurrentRoom();
-            this.currentRoom.setExits();
             this.rb.velocity = Vector3.zero;
             this.rb.Sleep();
             //this.rb.angularVelocity = Vector3.zero;
@@ -63,31 +99,20 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Exit") && MasterData.isExiting)
         {
-            this.currentRoom = MasterData.cs.getCurrentRoom();
-
-
-            if(other.gameObject == this.northExit && this.currentRoom.getNorthRoom() != null)
+            if(other.gameObject == this.northExit)
             {
-                this.currentRoom = this.currentRoom.getNorthRoom();
-                MasterData.cs.setCurrentRoom(this.currentRoom);
                 MasterData.whereDidIComeFrom = "north";
             }
-            else if (other.gameObject == this.southExit && this.currentRoom.getSouthRoom() != null)
+            else if (other.gameObject == this.southExit)
             {
-                this.currentRoom = this.currentRoom.getSouthRoom();
-                MasterData.cs.setCurrentRoom(this.currentRoom);
                 MasterData.whereDidIComeFrom = "south";
             }
-            else if (other.gameObject == this.eastExit && this.currentRoom.getEastRoom() != null)
+            else if (other.gameObject == this.eastExit)
             {
-                this.currentRoom = this.currentRoom.getEastRoom();
-                MasterData.cs.setCurrentRoom(this.currentRoom);
                 MasterData.whereDidIComeFrom = "east";
             }
-            else if (other.gameObject == this.westExit && this.currentRoom.getWestRoom() != null)
+            else if (other.gameObject == this.westExit)
             {
-                this.currentRoom = this.currentRoom.getWestRoom();
-                MasterData.cs.setCurrentRoom(this.currentRoom);
                 MasterData.whereDidIComeFrom = "west";
             }
             MasterData.isExiting = false;
@@ -102,25 +127,67 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.UpArrow) && this.isMoving == false)
+        Room currentRoom = MasterData.p.getCurrentRoom();
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) && this.isMoving == false)
         {
-            this.rb.AddForce(this.northExit.transform.position * movementSpeed);
-            this.isMoving = true;
+            if(currentRoom.hasExit("north"))
+            {
+                currentRoom.takeExit(MasterData.p, "north");
+                this.rb.AddForce(this.northExit.transform.position * movementSpeed);
+                this.isMoving = true;
+
+                float randomNum = Random.Range(0f, 1f);
+                if(randomNum > 0f)
+                {
+                    SceneManager.LoadScene("FightScene");
+                }
+            }
         }
         if(Input.GetKeyDown(KeyCode.LeftArrow) && this.isMoving == false)
         {
-            this.rb.AddForce(this.westExit.transform.position * movementSpeed);
-            this.isMoving = true;
+            if (currentRoom.hasExit("west"))
+            {
+                currentRoom.takeExit(MasterData.p, "west");
+                this.rb.AddForce(this.westExit.transform.position * movementSpeed);
+                this.isMoving = true;
+
+                float randomNum = Random.Range(0f, 1f);
+                if(randomNum < 0.3f)
+                {
+                    SceneManager.LoadScene("FightScene");
+                }
+            }
         }
         if (Input.GetKeyDown(KeyCode.RightArrow) && this.isMoving == false)
         {
-            this.rb.AddForce(this.eastExit.transform.position * movementSpeed);
-            this.isMoving = true;
+            if (currentRoom.hasExit("east"))
+            {
+                currentRoom.takeExit(MasterData.p, "east");
+                this.rb.AddForce(this.eastExit.transform.position * movementSpeed);
+                this.isMoving = true;
+
+                float randomNum = Random.Range(0f, 1f);
+                if(randomNum < 0.3f)
+                {
+                    SceneManager.LoadScene("FightScene");
+                }
+            }
         }
         if (Input.GetKeyDown(KeyCode.DownArrow) && this.isMoving == false)
         {
-            this.rb.AddForce(this.southExit.transform.position * movementSpeed);
-            this.isMoving = true;
+            if (currentRoom.hasExit("south"))
+            {
+                currentRoom.takeExit(MasterData.p, "south");
+                this.rb.AddForce(this.southExit.transform.position * movementSpeed);
+                this.isMoving = true;
+
+                float randomNum = Random.Range(0f, 1f);
+                if(randomNum < 0.3f)
+                {
+                    SceneManager.LoadScene("FightScene");
+                }
+            }
         }
 
     }

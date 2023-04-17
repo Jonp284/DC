@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
 public class Room
 {
     private string name;
@@ -10,10 +5,6 @@ public class Room
     private int numberOfExits;
     private Player[] thePlayers;
     private int currentNumberOfPlayers;
-    private Room northRoom;
-    private Room southRoom;
-    private Room eastRoom;
-    private Room westRoom;
     
     public Room(string name)
     {
@@ -43,7 +34,7 @@ public class Room
     
     
     
-    public void takeExit(Player who, string direction, Room newRoom)
+    public void takeExit(Player who, string direction)
     {
         Exit theExitToTake = null;
         for(int i = 0; i < this.numberOfExits; i++)
@@ -65,10 +56,6 @@ public class Room
             //remove player from this room
             this.removePlayerFromRoom(who);
             theExitToTake.addPlayer(who);
-
-            MasterData.cs.setCurrentRoom(newRoom);
-            MasterData.cs.getCurrentRoom().addPlayer(who);
-            MasterData.cs.getCurrentRoom().setExits(who.transform.position);
         }
     }
     
@@ -106,45 +93,6 @@ public class Room
         else
         {
             //System.err.println("Too Many Exits!!!!");
-        }
-    }
-
-    public void setExits(Vector3 playerPosition)
-    {
-        if (this.northRoom != null && Vector3.Dot(playerPosition - this.transform.position, this.northExit.transform.position - this.transform.position) > 0)
-        {
-            this.northExit.SetActive(true);
-        }
-        else
-        {
-            this.northExit.SetActive(false);
-        }
-
-        if (this.southRoom != null && Vector3.Dot(playerPosition - this.transform.position, this.southExit.transform.position - this.transform.position) > 0)
-        {
-            this.southExit.SetActive(true);
-        }
-        else
-        {
-            this.southExit.SetActive(false);
-        }
-
-        if (this.eastRoom != null && Vector3.Dot(playerPosition - this.transform.position, this.eastExit.transform.position - this.transform.position) > 0)
-        {
-            this.eastExit.SetActive(true);
-        }
-        else
-        {
-            this.eastExit.SetActive(false);
-        }
-
-        if (this.westRoom != null && Vector3.Dot(playerPosition - this.transform.position, this.westExit.transform.position - this.transform.position) > 0)
-        {
-            this.westExit.SetActive(true);
-        }
-        else
-        {
-            this.westExit.SetActive(false);
         }
     }
     
