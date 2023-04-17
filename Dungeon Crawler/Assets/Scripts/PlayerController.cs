@@ -138,7 +138,7 @@ public class PlayerController : MonoBehaviour
                 this.isMoving = true;
 
                 float randomNum = Random.Range(0f, 1f);
-                if(randomNum > 0f)
+                if(randomNum < 0.3f)
                 {
                     SceneManager.LoadScene("FightScene");
                 }
