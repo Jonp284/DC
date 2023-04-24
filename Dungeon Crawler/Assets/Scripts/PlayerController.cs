@@ -8,23 +8,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public GameObject northExit, southExit, eastExit, westExit;
     public GameObject westStart, eastStart, northStart, southStart;
-    private Player player;
-    private Monster monster;
-    private Monster monster1;
     public float movementSpeed = 40.0f;
     private bool isMoving;
-    private int hp;
-    private int armor;
-    private int attack;
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < 10; i++)
-        {
-            print(Random.Range(1.0f, 10.0f));
-        }
-
         this.updateExits();
 
         this.rb = this.GetComponent<Rigidbody>();
@@ -55,13 +44,6 @@ public class PlayerController : MonoBehaviour
         }
         
      
-    }
-
-    public void setStats(int hp, int armor, int attack)
-    {
-        this.hp = hp;
-        this.armor = armor;
-        this.attack = attack;
     }
 
     private void updateExits()
@@ -136,12 +118,6 @@ public class PlayerController : MonoBehaviour
                 currentRoom.takeExit(MasterData.p, "north");
                 this.rb.AddForce(this.northExit.transform.position * movementSpeed);
                 this.isMoving = true;
-
-                float randomNum = Random.Range(0f, 1f);
-                if(randomNum < 0.3f)
-                {
-                    SceneManager.LoadScene("FightScene");
-                }
             }
         }
         if(Input.GetKeyDown(KeyCode.LeftArrow) && this.isMoving == false)
@@ -151,12 +127,6 @@ public class PlayerController : MonoBehaviour
                 currentRoom.takeExit(MasterData.p, "west");
                 this.rb.AddForce(this.westExit.transform.position * movementSpeed);
                 this.isMoving = true;
-
-                float randomNum = Random.Range(0f, 1f);
-                if(randomNum < 0.3f)
-                {
-                    SceneManager.LoadScene("FightScene");
-                }
             }
         }
         if (Input.GetKeyDown(KeyCode.RightArrow) && this.isMoving == false)
@@ -166,12 +136,6 @@ public class PlayerController : MonoBehaviour
                 currentRoom.takeExit(MasterData.p, "east");
                 this.rb.AddForce(this.eastExit.transform.position * movementSpeed);
                 this.isMoving = true;
-
-                float randomNum = Random.Range(0f, 1f);
-                if(randomNum < 0.3f)
-                {
-                    SceneManager.LoadScene("FightScene");
-                }
             }
         }
         if (Input.GetKeyDown(KeyCode.DownArrow) && this.isMoving == false)
@@ -181,12 +145,6 @@ public class PlayerController : MonoBehaviour
                 currentRoom.takeExit(MasterData.p, "south");
                 this.rb.AddForce(this.southExit.transform.position * movementSpeed);
                 this.isMoving = true;
-
-                float randomNum = Random.Range(0f, 1f);
-                if(randomNum < 0.3f)
-                {
-                    SceneManager.LoadScene("FightScene");
-                }
             }
         }
 
